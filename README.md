@@ -38,7 +38,7 @@ The Euler-Cromer method is a semi-implicit scheme ideal for second-order systems
 - Update velocity:  
   $$ V_{i} = V_{i-1} + \left( \text{RHS of equation} \right) \cdot dt $$
 - Update position:  
-  $$ U_{i} = U_{i-1} + V_{i} \cdot dt $$
+  $ U_{i} = U_{i-1} + V_{i} \cdot dt $
 
 The integral terms are approximated using discrete summation over previous time steps.
 
