@@ -7,7 +7,9 @@ This project numerically solves a second-order integro-differential equation usi
 
 The equation is of the form:
 
-
+$$
+\frac{d^2U}{dt^2} + \lambda^2 U(t) - \epsilon \lambda^2 \int_0^t k(t - S) U(S) \, dS = f(t)
+$$
 
 \[
 \frac{d^2U}{dt^2} = \sigma_0 - \lambda^2 U(t) + \lambda^2 \epsilon \int_0^t \left[ A(t - \tau) U(\tau) + B(t - \tau) \frac{dU}{d\tau} \right] d\tau
