@@ -1,44 +1,54 @@
-# Numerical-solution-of-Volterra-integro-differential-equation
 # Integro-Differential Equation Solver using Euler-Cromer Method
 
-This project numerically solves a second-order integro-differential equation using the Euler-Cromer method. The equation models a dynamic system with memory effects, where the evolution of the function \( U(t) \) depends on both its current state and a convolution-like integral involving incomplete gamma functions.
+This project numerically solves a second-order integro-differential equation using the Euler-Cromer method. The system models dynamic behavior with memory effects, where the acceleration depends on both the current state and a convolution integral involving incomplete gamma functions.
 
-## 🧠 Mathematical Model
+## 🧠 Mathematical Formulation
 
-The equation is of the form:
+We consider the following integro-differential equation:
 
 $$
 \frac{d^2U}{dt^2} + \lambda^2 U(t) - \epsilon \lambda^2 \int_0^t k(t - S) U(S) \, dS = f(t)
 $$
 
-\[
-\frac{d^2U}{dt^2} = \sigma_0 - \lambda^2 U(t) + \lambda^2 \epsilon \int_0^t \left[ A(t - \tau) U(\tau) + B(t - \tau) \frac{dU}{d\tau} \right] d\tau
-\]
-
-
-
 Where:
-- \( A(t - \tau) \) and \( B(t - \tau) \) involve incomplete gamma functions
-- \( \epsilon, \alpha, \beta, \lambda, \sigma_0 \) are system parameters
+- \( U(t) \) is the unknown function (displacement)
+- \( \lambda \) is a stiffness-like parameter
+- \( \epsilon \) controls the strength of the memory term
+- \( k(t - S) \) is a kernel function involving incomplete gamma functions
+- \( f(t) = \sigma_0 \) is a constant forcing term
 
-The integral terms capture hereditary effects, making this a **Volterra-type integro-differential equation**.
+The kernel \( k(t - S) \) is defined as:
 
-## 🔢 Numerical Method
+$$
+k(t - S) = \frac{1}{\beta^\alpha} \left[ \Gamma(\alpha) \left( \text{gammainc}(\alpha, \beta(t - S)) \right)' \right]
+$$
 
-The solution is computed using the **Euler-Cromer method**, a variant of Euler's method suitable for second-order systems:
+Additionally, a velocity-dependent term is included via:
 
-- Velocity \( V(t) \) is updated using the derivative
-- Position \( U(t) \) is updated using the new velocity
+$$
+\int_0^t h(t - S) \frac{dU}{dS} \, dS
+$$
 
-Time is discretized with a fixed step size \( dt \), and the integral is approximated using a Riemann sum.
+Where \( h(t - S) \) also involves incomplete gamma functions with shifted parameters.
 
-## 📐 Parameters
+## 🔢 Numerical Method: Euler-Cromer
+
+The Euler-Cromer method is a semi-implicit scheme ideal for second-order systems:
+
+- Update velocity:  
+  $$ V_{i} = V_{i-1} + \left( \text{RHS of equation} \right) \cdot dt $$
+- Update position:  
+  $$ U_{i} = U_{i-1} + V_{i} \cdot dt $$
+
+The integral terms are approximated using discrete summation over previous time steps.
+
+## ⚙️ Parameters
 
 ```python
-epsilon = 0.1
-alpha = 0.074
-beta = 0.05
-lambda_ = 100
-sigma0 = 1.0
-phi0 = 0.0
-phi1 = 1.0
+epsilon = 0.1       # Memory strength
+alpha = 0.074       # Shape parameter for gamma function
+beta = 0.05         # Scale parameter
+lambda_ = 100       # Stiffness-like coefficient
+sigma0 = 1.0        # Constant forcing
+phi0 = 0.0          # Initial displacement
+phi1 = 1.0          # Initial velocity
